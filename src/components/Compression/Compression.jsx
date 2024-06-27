@@ -3,7 +3,7 @@ import { Form, Field, FormElement } from '@progress/kendo-react-form';
 import { Button } from '@progress/kendo-react-buttons';
 import { FormUpload } from './form-components';
 import axios from 'axios';
-import Compressor from 'compressorjs'; // Import Compressor from compressorjs
+import Compressor from 'compressorjs';
 
 const App = () => {
   const handleSubmit = async (dataItem, formRenderProps) => {
@@ -20,20 +20,13 @@ const App = () => {
         }
       }));
     }
-
     console.log('FormData:', formData);
 
     try {
       const response = await axios.post('http://127.0.0.1:5000/upload', formData);
-
-      console.log('Server Response:', response); // Log the full response object for debugging
-
+      console.log('Server Response:', response);
       console.log('Upload successful:', response.data);
       alert('Images uploaded successfully:', response);
-      // Reset the form after successful upload
-      formRenderProps.onFormReset();
-
-
     } catch (error) {
       console.error('Error uploading images:', error);
       alert('Error uploading images: ' + error.message);
