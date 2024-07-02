@@ -22,7 +22,7 @@ const SerialNumberCell = (props) => (
 const EmailCell = (props) => {
     const navigate = useNavigate();
     const handleClick = () => {
-        navigate('/clients/' + props.dataItem.id);
+        navigate('/client/' + props.dataItem.id);
     };
 
     return (
@@ -35,14 +35,12 @@ const EmailCell = (props) => {
 const Clients = () => {
     const [showDialog, setShowDialog] = useState(false);
     const [newClient, setNewClient] = useState({
-        name: '',
+        first_name: '',
+        last_name: '',
         email: '',
         phone: '',
-        address: '',
-        city: '',
-        state: '',
-        zip: '',
         country: '',
+        status: 'Active',
     });
 
     const handleDialogToggle = () => {
@@ -58,31 +56,36 @@ const Clients = () => {
         e.preventDefault();
         // Handle the new client submission here
         console.log('New client added:', newClient);
+        ClientData.push({
+            id: ClientData.length + 1,
+            name: `${newClient.first_name} ${newClient.last_name}`,
+            ...newClient
+        });
         setShowDialog(false);
     };
 
     return (
         <div className="container mx-auto p-4">
             <h1 className="text-3xl font-bold mb-8 text-center">Clients</h1>
-            <Button primary={true.toString()} onClick={handleDialogToggle}>Add Client</Button>
-            <Grid data={ClientData} className="shadow-md">
+            <Button primary={true.toString()} onClick={handleDialogToggle} className='my-5'>Add Client</Button>
+            <Grid data={ClientData} className="shadow-md" style={{ width: '929px' }}>
                 <GridColumn field="checkbox" title=" " width="50px" cell={CheckboxCell} />
                 <GridColumn field="sno" title="S.No." width="60px" cell={SerialNumberCell} />
                 <GridColumn field="name" title="Name" width="200px" />
                 <GridColumn field="email" title="Email" width="250px" cell={EmailCell} />
                 <GridColumn field="phone" title="Phone" width="150px" />
-                <GridColumn field="city" title="City" width="100px" />
-                <GridColumn field="state" title="State" width="100px" />
-                <GridColumn field="zip" title="Zip" width="100px" />
-                <GridColumn field="address" title="Address" width="200px" />
                 <GridColumn field="country" title="Country" width="100px" />
+                <GridColumn field="status" title="Status" width="100px" />
             </Grid>
 
             {showDialog && (
                 <Dialog title="Add Client" onClose={handleDialogToggle}>
                     <form onSubmit={handleSubmit}>
                         <div className="mb-4">
-                            <Input name="name" label="Name" value={newClient.name} onChange={handleChange} required />
+                            <Input name="first_name" label="First Name" value={newClient.first_name} onChange={handleChange} required />
+                        </div>
+                        <div className="mb-4">
+                            <Input name="last_name" label="Last Name" value={newClient.last_name} onChange={handleChange} required />
                         </div>
                         <div className="mb-4">
                             <Input name="email" label="Email" value={newClient.email} onChange={handleChange} required />
@@ -91,19 +94,14 @@ const Clients = () => {
                             <Input name="phone" label="Phone" value={newClient.phone} onChange={handleChange} required />
                         </div>
                         <div className="mb-4">
-                            <Input name="address" label="Address" value={newClient.address} onChange={handleChange} required />
-                        </div>
-                        <div className="mb-4">
-                            <Input name="city" label="City" value={newClient.city} onChange={handleChange} required />
-                        </div>
-                        <div className="mb-4">
-                            <Input name="state" label="State" value={newClient.state} onChange={handleChange} required />
-                        </div>
-                        <div className="mb-4">
-                            <Input name="zip" label="Zip" value={newClient.zip} onChange={handleChange} required />
-                        </div>
-                        <div className="mb-4">
                             <Input name="country" label="Country" value={newClient.country} onChange={handleChange} required />
+                        </div>
+                        <div className="mb-4">
+                            <label className="block text-sm font-medium text-gray-700">Status</label>
+                            <select name="status" value={newClient.status} onChange={handleChange} required className="mt-1 block w-full px-3 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                                <option value="Active">Active</option>
+                                <option value="Inactive">Inactive</option>
+                            </select>
                         </div>
                         <DialogActionsBar>
                             <Button onClick={handleDialogToggle}>Cancel</Button>
